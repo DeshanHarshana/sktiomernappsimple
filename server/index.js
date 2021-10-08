@@ -1,12 +1,14 @@
+require('dotenv').config();
 const express = require("express");
 const mongoose = require('mongoose')
 const app = express();
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
+const PORT =process.env.PORT;
 app.use(cors());
-const Message = require("./Model/Message")
 
+const Message = require("./Model/Message")
 
 const db="mongodb+srv://deshan:deshan2233@cluster0.db5si.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
@@ -23,9 +25,13 @@ const server = http.createServer(app);/*this is the server which we create using
 //this is how we connect our express server with socket.io server
 const io = new Server(server,  {
   cors: {
-    origin: "http://localhost:3000", /*our frontend server*/
+    origin: "https://616076ed27f46d715605bd9f--reactmernsockeiositeapp.netlify.app", /*our frontend server*/
+    
+    allowedHeaders:'*',
     methods: ["GET", "POST"],
+    credentials:true
   },
+  
 });
 /*adding cors is more important because it solve lot of cores issue with socket.io*/
 
@@ -101,6 +107,6 @@ io.on("connection", (socket) => { /*if someone emit event we use callback functi
 
 
 
-server.listen(3001, () => {
+server.listen(PORT, () => {
   console.log("SERVER RUNNING");
 });
