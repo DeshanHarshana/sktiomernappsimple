@@ -26,9 +26,7 @@ function Chat({ socket, username, room }) {
           ":" +
           new Date(Date.now()).getMinutes(),
       };
-      {/**
-      we emit new event with name "send_message"
-      */}
+      
       await socket.emit("send_message", messageData);
 
       /*we use above code to send our own message also our chat list
