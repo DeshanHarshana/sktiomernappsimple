@@ -10,7 +10,7 @@ app.use(cors());
 
 const Message = require("./Model/Message")
 
-const db="mongodb+srv://deshan:deshan2233@cluster0.db5si.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const db="mongodb+srv://deshan:1234@cluster0.4pgq5mf.mongodb.net/test?retryWrites=true&w=majority";
 
 mongoose.connect(db).then(()=>{
   console.log("mongodb connect")
