@@ -26,7 +26,6 @@ const server = http.createServer(app);/*this is the server which we create using
 const io = new Server(server,  {
   cors: {
     origin: "https://616076ed27f46d715605bd9f--reactmernsockeiositeapp.netlify.app", /*our frontend server*/
-    
     allowedHeaders:'*',
     methods: ["GET", "POST"],
     credentials:true
