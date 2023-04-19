@@ -3,7 +3,7 @@ import io from "socket.io-client"; /*this is socket.io client part. this is get 
 import { useState } from "react";
 import Chat from "./Chat";
 
-const socket = io.connect("https://chatappsocketiomern.herokuapp.com/");
+const socket = io.connect("https://socketiochatapp.onrender.com/");
 /*in this point we should put what is the socket io server url*/
 /*after we establish this io.connect our backend socket io server shows user connected with id
 and if we close our react app then our backend socket io server shows us user disconnected with id*/
