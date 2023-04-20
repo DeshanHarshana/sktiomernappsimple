@@ -5,12 +5,44 @@ const app = express();
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
-const PORT =process.env.PORT;
+const PORT = 4000;
 app.use(cors());
 
 const Message = require("./Model/Message")
 
 const db="mongodb+srv://deshan:1234@cluster0.4pgq5mf.mongodb.net/test?retryWrites=true&w=majority";
+
+
+
+//firebase
+
+var admin = require("firebase-admin");
+
+var serviceAccount = require("./serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+
+const database=admin.firestore();
+let messageRef=database.collection('Message');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 mongoose.connect(db).then(()=>{
   console.log("mongodb connect")
@@ -25,7 +57,7 @@ const server = http.createServer(app);/*this is the server which we create using
 //this is how we connect our express server with socket.io server
 const io = new Server(server,  {
   cors: {
-    origin: "https://616076ed27f46d715605bd9f--reactmernsockeiositeapp.netlify.app", /*our frontend server*/
+    origin: "http://localhost:3000", /*our frontend server*/
     allowedHeaders:'*',
     methods: ["GET", "POST"],
     credentials:true
@@ -57,12 +89,22 @@ io.on("connection", (socket) => { /*if someone emit event we use callback functi
   socket.on("join_room", (data) => {
     socket.join(data);
     console.log(`User with ID: ${socket.id} joined room: ${data}`);
-    Message.find({room:data}, '-_id room author message time', (error, result)=>{
-      if(!error){
-        socket.emit("allmessages",result)
-      }
+    // Message.find({room:data}, '-_id room author message time', (error, result)=>{
+    //   if(!error){
+    //     socket.emit("allmessages",result)
+    //     console.log("this is mongodb ", result)
+    //   }
       
+    // })
+
+    const dt=messageRef.where("room", '==', data);
+    dt.get().then(querySnapshot=>{
+      if(!querySnapshot.empty){
+       var p= querySnapshot.docs.map(doc => Object.assign(doc.data(), {id: doc.id}));
+       socket.emit("allmessages",p);
+      }
     })
+
    
   });
 
@@ -85,6 +127,9 @@ io.on("connection", (socket) => { /*if someone emit event we use callback functi
     message: data.message,
     time:data.time
    }
+
+   messageRef.add(messageData);
+
    const message=new Message(messageData);
    message.save().then(()=>{
     socket.to(data.room).emit("receive_message", data);
