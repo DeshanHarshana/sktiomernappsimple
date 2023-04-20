@@ -5,7 +5,7 @@ const app = express();
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
-const PORT = 4000;
+const PORT =process.env.PORT|  4000;
 app.use(cors());
 
 const Message = require("./Model/Message")
