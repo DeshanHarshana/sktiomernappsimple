@@ -57,7 +57,7 @@ const server = http.createServer(app);/*this is the server which we create using
 //this is how we connect our express server with socket.io server
 const io = new Server(server,  {
   cors: {
-    origin: "http://localhost:3000", /*our frontend server*/
+    origin: "https://6440f36ed618d063901535dd--famous-cactus-a361fb.netlify.app/", /*our frontend server*/
     allowedHeaders:'*',
     methods: ["GET", "POST"],
     credentials:true
