@@ -5,7 +5,7 @@ const app = express();
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
-const PORT =process.env.PORT|  4000;
+const PORT =process.env.PORT |  4000;
 app.use(cors());
 
 const Message = require("./Model/Message")
@@ -16,17 +16,17 @@ const db="mongodb+srv://deshan:1234@cluster0.4pgq5mf.mongodb.net/test?retryWrite
 
 //firebase
 
-var admin = require("firebase-admin");
+// var admin = require("firebase-admin");
 
-var serviceAccount = require("./serviceAccountKey.json");
+// var serviceAccount = require("./serviceAccountKey.json");
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount)
+// });
 
 
-const database=admin.firestore();
-let messageRef=database.collection('Message');
+// const database=admin.firestore();
+// let messageRef=database.collection('Message');
 
 
 
@@ -90,21 +90,21 @@ io.on("connection", (socket) => { /*if someone emit event we use callback functi
   socket.on("join_room", (data) => {
     socket.join(data);
     console.log(`User with ID: ${socket.id} joined room: ${data}`);
-    // Message.find({room:data}, '-_id room author message time', (error, result)=>{
-    //   if(!error){
-    //     socket.emit("allmessages",result)
-    //     console.log("this is mongodb ", result)
-    //   }
-      
-    // })
-
-    const dt=messageRef.where("room", '==', data);
-    dt.get().then(querySnapshot=>{
-      if(!querySnapshot.empty){
-       var p= querySnapshot.docs.map(doc => Object.assign(doc.data(), {id: doc.id}));
-       socket.emit("allmessages",p);
+    Message.find({room:data}, '-_id room author message time', (error, result)=>{
+      if(!error){
+        socket.emit("allmessages",result)
+        console.log("this is mongodb ", result)
       }
+      
     })
+
+    // const dt=messageRef.where("room", '==', data);
+    // dt.get().then(querySnapshot=>{
+    //   if(!querySnapshot.empty){
+    //    var p= querySnapshot.docs.map(doc => Object.assign(doc.data(), {id: doc.id}));
+    //    socket.emit("allmessages",p);
+    //   }
+    // })
 
    
   });
@@ -129,7 +129,7 @@ io.on("connection", (socket) => { /*if someone emit event we use callback functi
     time:data.time
    }
 
-   messageRef.add(messageData);
+  // messageRef.add(messageData);
 
    const message=new Message(messageData);
    message.save().then(()=>{
